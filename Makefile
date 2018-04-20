@@ -2,7 +2,7 @@ DIR_UNICORE32	:= $(wildcard ~/UniCore32)
 DIR_WORKING	:= $(DIR_UNICORE32)/working
 DIR_GNU_UC	:= /pub/toolchain/uc32/unicore32-linux/
 
-CROSS_UNICORE32	:= /pub/toolchain/uc32
+CROSS_UNICORE32	:= /usr/unicore/gnu-toolchain-unicore/uc4
 CROSS_LIB	:= $(CROSS_UNICORE32)/unicore32-linux/lib
 CROSS_COMPILE	:= $(CROSS_UNICORE32)/bin/unicore32-linux-
 OBJDUMP		:= $(CROSS_COMPILE)objdump
