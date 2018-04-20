@@ -1,4 +1,4 @@
-LINUX_REPO_LOCAL	:= /pub/git/linux.git
+LINUX_REPO_LOCAL	:= /pub/GIT-ORIGIN/linux/linux.git
 LINUX_REPO_GITHUB	:= git@github.com:gxt/linux.git
 LINUX_REPO_LINUS	:= git@github.com:torvalds/linux.git
 LINUX_ARCH		:= unicore32
