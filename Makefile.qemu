@@ -1,5 +1,4 @@
-QEMU_GITREPO	:= /pub/git/qemu.git
-QEMU_REPO31	:= $(USER)@192.168.200.31:/pub/git/qemu.git
+QEMU_REPO_LOCAL	:= /pub/GIT-ORIGIN/qemu/qemu.git
 QEMU_BUILDLOG	:= $(DIR_WORKING)/qemu-build.log
 QEMU_TARGETS	:= unicore32-linux-user,unicore32-softmmu
 QEMU_TRACELOG	:= $(DIR_WORKING)/trace.log
@@ -9,7 +8,7 @@ qemu-new:
 		mkdir -p $(DIR_WORKING)/qemu-unicore32
 	@echo "Remove old qemu repo ..."
 	@rm -fr $(DIR_WORKING)/qemu
-	@cd $(DIR_WORKING); git clone $(QEMU_GITREPO)
+	@cd $(DIR_WORKING); git clone $(QEMU_REPO_LOCAL)
 	@cd $(DIR_WORKING)/qemu;				\
 		git br unicore32 origin/unicore32;		\
 		git co unicore32
