@@ -11,12 +11,6 @@ BUSYBOX_TARBALL	:= /pub/backup/busybox-1.20.0.tar.bz2
 BUSYBOX_CONFIG	:= $(DIR_UNICORE32)/initramfs/initramfs_busybox_config
 BUSYBOX_BUILDLOG:= $(DIR_WORKING)/busybox-build.log
 
-QEMU_GITREPO	:= /pub/git/qemu.git
-QEMU_REPO31	:= $(USER)@192.168.200.31:/pub/git/qemu.git
-QEMU_BUILDLOG	:= $(DIR_WORKING)/qemu-build.log
-QEMU_TARGETS	:= unicore32-linux-user,unicore32-softmmu
-QEMU_TRACELOG	:= $(DIR_WORKING)/trace.log
-
 PATH		:= $(CROSS_UNICORE32)/bin:$(PATH)
 
 all:
@@ -38,6 +32,7 @@ all:
 
 include Makefile.mygit
 include Makefile.linux
+include Makefile.qemu
 
 highfive:
 	@make clean
@@ -65,43 +60,4 @@ busybox:
 		>> $(BUSYBOX_BUILDLOG) 2>&1
 	@make -C $(DIR_WORKING)/busybox install			\
 		>> $(BUSYBOX_BUILDLOG) 2>&1
-
-qemu-new:
-	@test -d $(DIR_WORKING)/qemu-unicore32 ||		\
-		mkdir -p $(DIR_WORKING)/qemu-unicore32
-	@echo "Remove old qemu repo ..."
-	@rm -fr $(DIR_WORKING)/qemu
-	@cd $(DIR_WORKING); git clone $(QEMU_GITREPO)
-	@cd $(DIR_WORKING)/qemu;				\
-		git br unicore32 origin/unicore32;		\
-		git co unicore32
-
-qemu-make:
-	@echo "Configure qemu ..."
-	@cd $(DIR_WORKING)/qemu; ./configure			\
-		--enable-trace-backend=stderr			\
-		--target-list=$(QEMU_TARGETS)			\
-		--enable-debug			 		\
-		--disable-sdl			 		\
-		--interp-prefix=$(DIR_GNU_UC)			\
-		--prefix=$(DIR_WORKING)/qemu-unicore32		\
-		>> $(QEMU_BUILDLOG) 2>&1
-	@echo "Make qemu and make install ..."
-	@make -C $(DIR_WORKING)/qemu -j4 >> $(QEMU_BUILDLOG) 2>&1
-	@make -C $(DIR_WORKING)/qemu install >> $(QEMU_BUILDLOG) 2>&1
-
-qemu-run:
-	@echo "Remove old log file"
-	@rm -fr $(QEMU_TRACELOG)
-	@echo "Running QEMU in this tty ..."
-	@$(DIR_WORKING)/qemu-unicore32/bin/qemu-system-unicore32\
-		-curses						\
-		-M puv3						\
-		-m 512						\
-		-icount 0					\
-		-kernel $(DIR_WORKING)/zImage			\
-		-net nic					\
-		-net tap,ifname=tap_$(USER),script=no,downscript=no	\
-		-append "root=/dev/nfs nfsroot=192.168.200.161:/export/guestroot/,tcp rw ip=192.168.122.4"    \
-		2> $(QEMU_TRACELOG)
 
