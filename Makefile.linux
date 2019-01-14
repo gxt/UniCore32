@@ -37,7 +37,7 @@ linux-make:
 STABLE_LOCAL		:= /pub/GIT-ORIGIN/linux/linux-stable.git
 STABLE_WORKING		:= $(DIR_WORKING)/linux-stable
 STABLE_VERSION		:= v4.9.150
-STABLE_PATCHES		:= $(DIR_UNICORE32)/patches-stable
+STABLE_PATCHES		:= $(DIR_UNICORE32)/patches-linux
 
 stable-new:
 	@echo "Remove old linux-stable repo ..."
@@ -46,6 +46,7 @@ stable-new:
 	@echo "Clone local repo"
 	@git clone $(STABLE_LOCAL) -- $(STABLE_WORKING)
 	@cd $(STABLE_WORKING); git checkout -b unicore32 $(STABLE_VERSION)
+	@cd $(STABLE_WORKING); git am $(STABLE_PATCHES)/*
 
 stable-make:
 	@echo "Make mrproper ..."
