@@ -33,4 +33,17 @@ linux-make:
 	@ln -sf $(DIR_WORKING)/linux/arch/unicore32/boot/zImage $(DIR_WORKING)
 	@ln -sf $(DIR_WORKING)/linux/System.map $(DIR_WORKING)
 
+STABLE_LOCAL		:= /pub/GIT-ORIGIN/linux/linux-stable.git
+STABLE_WORKING		:= $(DIR_WORKING)/linux-stable
+STABLE_VERSION		:= v4.9.150
+STABLE_PATCHES		:= $(DIR_UNICORE32)/patches-stable
+
+stable-new:
+	@echo "Remove old linux-stable repo ..."
+	@test -d $(DIR_WORKING) || mkdir -p $(DIR_WORKING)
+	@rm -fr $(STABLE_WORKING)
+	@echo "Clone local repo"
+	@git clone $(STABLE_LOCAL) -- $(STABLE_WORKING)
+	@cd $(STABLE_WORKING); git checkout -b unicore32 $(STABLE_VERSION)
+
 
