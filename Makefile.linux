@@ -1,6 +1,6 @@
 LINUX_REPO_LOCAL	:= /pub/GIT-ORIGIN/linux/linux.git
 LINUX_ARCH		:= unicore32
-LINUX_BUILDLOG		:= $(DIR_WORKING)/linux-build.log
+LINUX_BUILDLOG		:= $(DIR_WORKING)/buildlog-linux
 # v4.8-rc8
 LINUX_PATCHES_BASE	:= 08895a8b6b06ed2323cd97a36ee40a116b3db8ed
 LINUX_PATCHES_DIR	:= $(DIR_UNICORE32)/patches-linux
