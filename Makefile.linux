@@ -59,3 +59,9 @@ stable-make:
 	@ln -sf $(STABLE_WORKING)/arch/unicore32/boot/zImage $(DIR_WORKING)
 	@ln -sf $(STABLE_WORKING)/System.map $(DIR_WORKING)
 
+stable-headers:
+	@echo "Headers check ..."
+	@make -C $(STABLE_WORKING) ARCH=$(LINUX_ARCH) headers_check
+	@echo "Headers install ..."
+	@make -C $(STABLE_WORKING) ARCH=$(LINUX_ARCH) headers_install
+
