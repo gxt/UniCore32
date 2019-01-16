@@ -61,7 +61,7 @@ stable-make:
 
 stable-headers:
 	@echo "Headers check ..."
-	@make -C $(STABLE_WORKING) ARCH=$(LINUX_ARCH) headers_check
+	@make -C $(STABLE_WORKING) ARCH=$(LINUX_ARCH) headers_check		>> $(LINUX_BUILDLOG) 2>&1
 	@echo "Headers install ..."
-	@make -C $(STABLE_WORKING) ARCH=$(LINUX_ARCH) headers_install
+	@make -C $(STABLE_WORKING) ARCH=$(LINUX_ARCH) headers_install		>> $(LINUX_BUILDLOG) 2>&1
 
