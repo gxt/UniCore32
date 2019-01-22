@@ -10,7 +10,7 @@ QEMU_0207_PATCHES	:= $(DIR_UNICORE32)/patches-qemu-0207
 qemu-0207-new:
 	@echo "Remove old qemu repo ..."
 	@test -d $(DIR_WORKING) || mkdir -p $(DIR_WORKING)
-	@rm -fr $(DIR_WORKING)/qemu
+	@rm -fr $(QEMU_0207_WORKING)
 	@echo "Clone local repo"
 	@git clone $(QEMU_LOCAL) -- $(QEMU_0207_WORKING)
 	@cd $(QEMU_0207_WORKING); git checkout -b unicore32 $(QEMU_0207_VERSION)
