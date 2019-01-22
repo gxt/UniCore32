@@ -1,4 +1,4 @@
-LINUX_REPO_LOCAL	:= /pub/GIT-ORIGIN/linux/linux.git
+LINUX_LOCAL		:= /pub/GIT-ORIGIN/linux/linux.git
 LINUX_ARCH		:= unicore32
 LINUX_BUILDLOG		:= $(DIR_WORKING)/buildlog-linux
 # v4.8-rc8
@@ -13,7 +13,7 @@ linux-new:
 	@rm -fr $(DIR_WORKING)/linux
 	@echo "Clone local repo"
 	@cd $(DIR_WORKING);					\
-		git clone $(LINUX_REPO_LOCAL) -- linux
+		git clone $(LINUX_LOCAL) -- linux
 	@echo "Create branch and apply unicore32 patches"
 	@cd $(DIR_WORKING)/linux;				\
 		git branch unicore32 $(LINUX_PATCHES_BASE);	\
