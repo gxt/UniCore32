@@ -1,0 +1,28 @@
+From 8064c17af2aa5331ce85fe5d59e306263fb1ffdd Mon Sep 17 00:00:00 2001
+From: lzj <lizhuojin@pku.edu.cn>
+Date: Sat, 24 Dec 2016 14:07:34 +0800
+Subject: [PATCH] handle-exception-zero
+
+---
+ cpu-exec.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/cpu-exec.c b/cpu-exec.c
+index 5d9710a..47d020b 100644
+--- a/cpu-exec.c
++++ b/cpu-exec.c
+@@ -400,6 +400,11 @@ static inline void cpu_handle_debug_exception(CPUState *cpu)
+ 
+ static inline bool cpu_handle_exception(CPUState *cpu, int *ret)
+ {
++    if (cpu->exception_index == 0) {
++	cpu->exception_index = -1;
++	return true;
++    }
++
+     if (cpu->exception_index >= 0) {
+         if (cpu->exception_index >= EXCP_INTERRUPT) {
+             /* exit request from the cpu execution loop */
+-- 
+2.7.4
+
