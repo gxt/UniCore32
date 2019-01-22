@@ -28,9 +28,7 @@ all:
 	@echo "Running qemu and get trace"
 	@echo "     make qemu-run  (file and local mode)"
 	@echo ""
-#	@make mygit-help
 
-#include Makefile.mygit
 include Makefile.linux
 include Makefile.qemu
 
