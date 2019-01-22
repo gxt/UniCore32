@@ -1,17 +1,20 @@
-QEMU_REPO_LOCAL	:= /pub/GIT-ORIGIN/qemu/qemu.git
-QEMU_BUILDLOG	:= $(DIR_WORKING)/qemu-build.log
+QEMU_LOCAL	:= /pub/GIT-ORIGIN/qemu/qemu.git
+QEMU_BUILDLOG	:= $(DIR_WORKING)/buildlog-qemu
 QEMU_TARGETS	:= unicore32-linux-user,unicore32-softmmu
-QEMU_TRACELOG	:= $(DIR_WORKING)/trace.log
+QEMU_TRACELOG	:= $(DIR_WORKING)/tracelog-qemu
 
-qemu-new:
-	@test -d $(DIR_WORKING)/qemu-unicore32 ||		\
-		mkdir -p $(DIR_WORKING)/qemu-unicore32
+QEMU_0207_WORKING	:= $(DIR_WORKING)/qemu-0207
+QEMU_0207_VERSION	:= v2.7.0
+QEMU_0207_PATCHES	:= $(DIR_UNICORE32)/patches-qemu-0207
+
+qemu-0207-new:
 	@echo "Remove old qemu repo ..."
+	@test -d $(DIR_WORKING) || mkdir -p $(DIR_WORKING)
 	@rm -fr $(DIR_WORKING)/qemu
-	@cd $(DIR_WORKING); git clone $(QEMU_REPO_LOCAL)
-	@cd $(DIR_WORKING)/qemu;				\
-		git br unicore32 origin/unicore32;		\
-		git co unicore32
+	@echo "Clone local repo"
+	@git clone $(QEMU_LOCAL) -- $(QEMU_0207_WORKING)
+	@cd $(QEMU_0207_WORKING); git checkout -b unicore32 $(QEMU_0207_VERSION)
+	@cd $(QEMU_0207_WORKING); git am $(QEMU_0207_PATCHES)/*
 
 qemu-make:
 	@echo "Configure qemu ..."
@@ -28,6 +31,8 @@ qemu-make:
 	@make -C $(DIR_WORKING)/qemu install >> $(QEMU_BUILDLOG) 2>&1
 
 qemu-run:
+	@test -d $(DIR_WORKING)/qemu-unicore32 ||		\
+		mkdir -p $(DIR_WORKING)/qemu-unicore32
 	@echo "Remove old log file"
 	@rm -fr $(QEMU_TRACELOG)
 	@echo "Running QEMU in this tty ..."
