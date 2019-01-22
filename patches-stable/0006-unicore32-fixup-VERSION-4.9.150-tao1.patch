@@ -1,0 +1,26 @@
+From 7653b105cb54f39bcef83c76bf81b1026e938665 Mon Sep 17 00:00:00 2001
+From: Guan Xuetao <gxt@pku.edu.cn>
+Date: Tue, 22 Jan 2019 15:00:15 +0800
+Subject: [PATCH] unicore32: fixup VERSION 4.9.150-tao1
+
+Signed-off-by: Guan Xuetao <gxt@pku.edu.cn>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 0e78749..d10b592 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ VERSION = 4
+ PATCHLEVEL = 9
+ SUBLEVEL = 150
+-EXTRAVERSION =
++EXTRAVERSION = -tao1
+ NAME = Roaring Lionus
+ 
+ # *DOCUMENTATION*
+-- 
+2.7.4
+
