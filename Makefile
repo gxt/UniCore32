@@ -1,6 +1,5 @@
 DIR_UNICORE32	:= $(shell pwd)
 DIR_WORKING	:= $(DIR_UNICORE32)/working
-DIR_GNU_UC	:= /pub/toolchain/uc32/unicore32-linux/
 
 CROSS_UNICORE32	:= /usr/unicore/gnu-toolchain-unicore/uc4
 CROSS_LIB	:= $(CROSS_UNICORE32)/unicore32-linux/lib
