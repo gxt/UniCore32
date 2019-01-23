@@ -1,36 +1,35 @@
 LINUX_ARCH		:= unicore32
 LINUX_BUILDLOG		:= $(DIR_WORKING)/buildlog-linux
-
 LINUX_DEFCONFIG		:= unicore32_defconfig
 
-STABLE_LOCAL		:= /pub/GIT-ORIGIN/linux/linux-stable.git
-STABLE_WORKING		:= $(DIR_WORKING)/linux-stable
-STABLE_VERSION		:= v4.9.150
-STABLE_PATCHES		:= $(DIR_UNICORE32)/patches-linux-0409
+LINUX_0409_LOCAL		:= /pub/GIT-ORIGIN/linux/linux-stable.git
+LINUX_0409_WORKING		:= $(DIR_WORKING)/linux-0409
+LINUX_0409_VERSION		:= v4.9.150
+LINUX_0409_PATCHES		:= $(DIR_UNICORE32)/patches-linux-0409
 
-stable-new:
-	@echo "Remove old linux-stable repo ..."
+linux-0409-new:
+	@echo "Remove old linux-0409 repo ..."
 	@test -d $(DIR_WORKING) || mkdir -p $(DIR_WORKING)
-	@rm -fr $(STABLE_WORKING)
+	@rm -fr $(LINUX_0409_WORKING)
 	@echo "Clone local repo"
-	@git clone $(STABLE_LOCAL) -- $(STABLE_WORKING)
-	@cd $(STABLE_WORKING); git checkout -b unicore32 $(STABLE_VERSION)
-	@cd $(STABLE_WORKING); git am $(STABLE_PATCHES)/*
+	@git clone $(LINUX_0409_LOCAL) -- $(LINUX_0409_WORKING)
+	@cd $(LINUX_0409_WORKING); git checkout -b unicore32 $(LINUX_0409_VERSION)
+	@cd $(LINUX_0409_WORKING); git am $(LINUX_0409_PATCHES)/*
 
-stable-make:
+linux-0409-make:
 	@echo "Make mrproper ..."
-	@make -C $(STABLE_WORKING) ARCH=$(LINUX_ARCH) mrproper			>> $(LINUX_BUILDLOG) 2>&1
+	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) mrproper		>> $(LINUX_BUILDLOG) 2>&1
 	@echo "Make $(LINUX_DEFCONFIG) ..."
-	@make -C $(STABLE_WORKING) ARCH=$(LINUX_ARCH) $(LINUX_DEFCONFIG)	>> $(LINUX_BUILDLOG) 2>&1
+	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) $(LINUX_DEFCONFIG)	>> $(LINUX_BUILDLOG) 2>&1
 	@echo "Making (in several minutes) ..."
-	@make -C $(STABLE_WORKING) ARCH=$(LINUX_ARCH) -j4			>> $(LINUX_BUILDLOG) 2>&1
+	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) -j4			>> $(LINUX_BUILDLOG) 2>&1
 	@echo "Softlinking necessary files ..."
-	@ln -sf $(STABLE_WORKING)/arch/unicore32/boot/zImage $(DIR_WORKING)
-	@ln -sf $(STABLE_WORKING)/System.map $(DIR_WORKING)
+	@ln -sf $(LINUX_0409_WORKING)/arch/unicore32/boot/zImage $(DIR_WORKING)
+	@ln -sf $(LINUX_0409_WORKING)/System.map $(DIR_WORKING)
 
-stable-headers:
+linux-0409-headers:
 	@echo "Headers check ..."
-	@make -C $(STABLE_WORKING) ARCH=$(LINUX_ARCH) headers_check		>> $(LINUX_BUILDLOG) 2>&1
+	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) headers_check		>> $(LINUX_BUILDLOG) 2>&1
 	@echo "Headers install ..."
-	@make -C $(STABLE_WORKING) ARCH=$(LINUX_ARCH) headers_install		>> $(LINUX_BUILDLOG) 2>&1
+	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) headers_install	>> $(LINUX_BUILDLOG) 2>&1
 
