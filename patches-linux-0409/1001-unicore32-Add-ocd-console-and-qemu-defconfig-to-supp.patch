@@ -1,0 +1,173 @@
+From ed2404283b370ecd0ae05566834e6bd3c685a59a Mon Sep 17 00:00:00 2001
+From: Guan Xuetao <gxt@mprc.pku.edu.cn>
+Date: Tue, 11 Sep 2012 14:38:18 +0800
+Subject: [PATCH] unicore32: Add ocd console to support qemu
+ simulator
+
+Signed-off-by: Guan Xuetao <gxt@mprc.pku.edu.cn>
+---
+ arch/unicore32/Kconfig.debug          |  5 ++
+ arch/unicore32/kernel/Makefile        |  1 +
+ arch/unicore32/kernel/ocd_console.c   | 97 +++++++++++++++++++++++++++++++++++
+ arch/unicore32/kernel/setup.c         |  2 +
+ arch/unicore32/kernel/setup.h         |  1 +
+ 5 files changed, 106 insertions(+)
+ create mode 100644 arch/unicore32/configs/qemu_defconfig
+ create mode 100644 arch/unicore32/kernel/ocd_console.c
+
+diff --git a/arch/unicore32/Kconfig.debug b/arch/unicore32/Kconfig.debug
+index f075bbe..95ea2f0 100644
+--- a/arch/unicore32/Kconfig.debug
++++ b/arch/unicore32/Kconfig.debug
+@@ -13,6 +13,11 @@ config EARLY_PRINTK
+ 	  with klogd/syslogd or the X server. You should normally N here,
+ 	  unless you want to debug such a crash.
+ 
++config OCD_CONSOLE
++	bool
++	depends on VGA_CONSOLE!=y && FRAMEBUFFER_CONSOLE!=y && DEBUG_OCD
++	default y
++
+ # These options are only for real kernel hackers who want to get their hands dirty.
+ config DEBUG_LL
+ 	bool "Kernel low-level debugging functions"
+diff --git a/arch/unicore32/kernel/Makefile b/arch/unicore32/kernel/Makefile
+index 607a72f..bc8be50 100644
+--- a/arch/unicore32/kernel/Makefile
++++ b/arch/unicore32/kernel/Makefile
+@@ -26,5 +26,6 @@ obj-$(CONFIG_PUV3_NB0916)	+= puv3-nb0916.o
+ 
+ head-y				:= head.o
+ obj-$(CONFIG_DEBUG_LL)		+= debug.o
++obj-$(CONFIG_OCD_CONSOLE)	+= ocd_console.o
+ 
+ extra-y				:= $(head-y) vmlinux.lds
+diff --git a/arch/unicore32/kernel/ocd_console.c b/arch/unicore32/kernel/ocd_console.c
+new file mode 100644
+index 0000000..be069fa
+--- /dev/null
++++ b/arch/unicore32/kernel/ocd_console.c
+@@ -0,0 +1,97 @@
++/*
++ *  To be used if there's no graphics device in board, and only ocd
++ *  available for text output.
++ */
++
++#include <linux/types.h>
++#include <linux/kdev_t.h>
++#include <linux/console.h>
++#include <linux/vt_kern.h>
++#include <linux/screen_info.h>
++#include <linux/init.h>
++#include <linux/module.h>
++
++#include <mach/ocd.h>
++
++/*
++ *  OCD console driver
++ */
++#define OCD_CON_COLUMNS	80
++#define OCD_CON_ROWS	25
++
++static const char *ocd_con_startup(void)
++{
++	return "ocd console device";
++}
++
++static void ocd_con_init(struct vc_data *vc, int init)
++{
++	vc->vc_can_do_color = 1;
++	if (init) {
++		vc->vc_cols = OCD_CON_COLUMNS;
++		vc->vc_rows = OCD_CON_ROWS;
++	} else
++		vc_resize(vc, OCD_CON_COLUMNS, OCD_CON_ROWS);
++}
++
++static int ocd_con_dummy(void)
++{
++	return 0;
++}
++
++static void ocd_con_putc(struct vc_data *vc, int c, int ypos, int xpos)
++{
++	ocd_putc(c);
++}
++
++static void ocd_con_putcs(struct vc_data *vc, const unsigned short *s,
++			int n, int ypos, int xpos)
++{
++	static int ypos_last;
++
++	while (*s && n-- > 0) {
++		ocd_putc((int)*s);
++		s++;
++	}
++
++	if (ypos != ypos_last) {
++		ocd_putc('\n');
++		ocd_putc('\r');
++	}
++	ypos_last = ypos;
++}
++
++static int ocd_con_scroll(struct vc_data *vc, int t, int b, int dir, int cnt)
++{
++	ocd_putc('\n');
++	ocd_putc('\r');
++	return 0;
++}
++#define DUMMY	(void *)ocd_con_dummy
++
++/*
++ *  The console `switch' structure for the ocd console
++ *
++ *  Most of the operations are dummies.
++ */
++
++const struct consw ocd_con = {
++    .owner =		THIS_MODULE,
++    .con_startup =	ocd_con_startup,
++    .con_init =		ocd_con_init,
++    .con_deinit =	DUMMY,
++    .con_clear =	DUMMY,
++    .con_putc =		ocd_con_putc,
++    .con_putcs =	ocd_con_putcs,
++    .con_cursor =	DUMMY,
++    .con_scroll =	ocd_con_scroll,
++    //.con_bmove =	DUMMY,
++    .con_switch =	DUMMY,
++    .con_blank =	DUMMY,
++    .con_font_set =	DUMMY,
++    .con_font_get =	DUMMY,
++    .con_font_default =	DUMMY,
++    .con_font_copy =	DUMMY,
++    .con_set_palette =	DUMMY,
++    .con_scrolldelta =	DUMMY,
++};
+diff --git a/arch/unicore32/kernel/setup.c b/arch/unicore32/kernel/setup.c
+index c2bffa5..bed9388 100644
+--- a/arch/unicore32/kernel/setup.c
++++ b/arch/unicore32/kernel/setup.c
+@@ -270,6 +270,8 @@ void __init setup_arch(char **cmdline_p)
+ #ifdef CONFIG_VT
+ #if defined(CONFIG_VGA_CONSOLE)
+ 	conswitchp = &vga_con;
++#elif defined(CONFIG_OCD_CONSOLE)
++	conswitchp = &ocd_con;
+ #elif defined(CONFIG_DUMMY_CONSOLE)
+ 	conswitchp = &dummy_con;
+ #endif
+diff --git a/arch/unicore32/kernel/setup.h b/arch/unicore32/kernel/setup.h
+index f5c51b8..eced662 100644
+--- a/arch/unicore32/kernel/setup.h
++++ b/arch/unicore32/kernel/setup.h
+@@ -36,4 +36,5 @@ extern asmlinkage void c_backtrace(unsigned long fp, int pmode);
+ 
+ extern void __show_regs(struct pt_regs *);
+ 
++extern const struct consw ocd_con;	/* ocd console buffer */
+ #endif
+-- 
+2.7.4
+
