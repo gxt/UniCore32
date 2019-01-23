@@ -6,6 +6,9 @@ QEMU_TRACELOG	:= $(DIR_WORKING)/tracelog-qemu
 QEMU_0207_WORKING	:= $(DIR_WORKING)/qemu-0207
 QEMU_0207_VERSION	:= v2.7.0
 QEMU_0207_PATCHES	:= $(DIR_UNICORE32)/patches-qemu-0207
+QEMU_0207_RUNNING	:= $(DIR_WORKING)/qemu-0207-uc32
+
+QEMU_PIXMAN_LOCAL	:= /pub/GIT-ORIGIN/qemu/pixman.git
 
 qemu-0207-new:
 	@echo "Remove old qemu repo ..."
@@ -14,21 +17,23 @@ qemu-0207-new:
 	@echo "Clone local repo"
 	@git clone $(QEMU_LOCAL) -- $(QEMU_0207_WORKING)
 	@cd $(QEMU_0207_WORKING); git checkout -b unicore32 $(QEMU_0207_VERSION)
+	@cd $(QEMU_0207_WORKING); git submodule update --reference $(QEMU_PIXMAN_LOCAL) --init pixman
 	@cd $(QEMU_0207_WORKING); git am $(QEMU_0207_PATCHES)/*
 
 qemu-make:
 	@echo "Configure qemu ..."
-	@cd $(DIR_WORKING)/qemu; ./configure			\
-		--enable-trace-backend=stderr			\
+	@cd $(QEMU_0207_WORKING); ./configure			\
 		--target-list=$(QEMU_TARGETS)			\
 		--enable-debug			 		\
 		--disable-sdl			 		\
+		--enable-curses					\
+		--extra-cflags="-D restrict=restricT"		\
 		--interp-prefix=$(DIR_GNU_UC)			\
-		--prefix=$(DIR_WORKING)/qemu-unicore32		\
+		--prefix=$(QEMU_0207_RUNNING)			\
 		>> $(QEMU_BUILDLOG) 2>&1
 	@echo "Make qemu and make install ..."
-	@make -C $(DIR_WORKING)/qemu -j4 >> $(QEMU_BUILDLOG) 2>&1
-	@make -C $(DIR_WORKING)/qemu install >> $(QEMU_BUILDLOG) 2>&1
+	@make -C $(QEMU_0207_WORKING) -j4	>> $(QEMU_BUILDLOG) 2>&1
+	@make -C $(QEMU_0207_WORKING) install	>> $(QEMU_BUILDLOG) 2>&1
 
 qemu-run:
 	@test -d $(DIR_WORKING)/qemu-unicore32 ||		\
