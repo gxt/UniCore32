@@ -14,9 +14,11 @@ linux-0409-new:
 	@echo "Clone local repo"
 	@git clone $(LINUX_0409_LOCAL) -- $(LINUX_0409_WORKING)
 	@cd $(LINUX_0409_WORKING); git checkout -b unicore32 $(LINUX_0409_VERSION)
-	@cd $(LINUX_0409_WORKING); git am $(LINUX_0409_PATCHES)/*
+	@cd $(LINUX_0409_WORKING); git am $(LINUX_0409_PATCHES)/*.patch
 
 linux-0409-make:
+	@echo "Remove old log file"
+	@rm -fr $(LINUX_BUILDLOG)
 	@echo "Make mrproper ..."
 	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) mrproper		>> $(LINUX_BUILDLOG) 2>&1
 	@echo "Make $(LINUX_DEFCONFIG) ..."
@@ -29,7 +31,7 @@ linux-0409-make:
 
 linux-0409-headers:
 	@echo "Headers check ..."
-	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) headers_check		>> $(LINUX_BUILDLOG) 2>&1
+	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) headers_check
 	@echo "Headers install ..."
-	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) headers_install	>> $(LINUX_BUILDLOG) 2>&1
+	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) headers_install
 
