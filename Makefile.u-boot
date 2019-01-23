@@ -1,0 +1,24 @@
+U_BOOT_LOCAL	:= /pub/GIT-ORIGIN/u-boot.git
+U_BOOT_BUILDLOG	:= $(DIR_WORKING)/buildlog-u-boot
+
+U_BOOT_201012_WORKING	:= $(DIR_WORKING)/u-boot-201012
+U_BOOT_201012_VERSION	:= v2010.12-rc1
+U_BOOT_201012_PATCHES	:= $(DIR_UNICORE32)/patches-u-boot-201012
+
+u-boot-201012-new:
+	@echo "Remove old u-boot repo ..."
+	@test -d $(DIR_WORKING) || mkdir -p $(DIR_WORKING)
+	@rm -fr $(U_BOOT_201012_WORKING)
+	@echo "Clone local repo"
+	@git clone $(U_BOOT_LOCAL) -- $(U_BOOT_201012_WORKING)
+	@cd $(U_BOOT_201012_WORKING); git checkout -b unicore32 $(U_BOOT_201012_VERSION)
+	@cd $(U_BOOT_201012_WORKING); git am $(U_BOOT_201012_PATCHES)/*
+
+u-boot-201012-make:
+	@echo "Remove old log file"
+	@rm -fr $(U_BOOT_BUILDLOG)
+	@echo "Configure u-boot ..."
+	@make -C $(U_BOOT_201012_WORKING) **config	>> $(U_BOOT_BUILDLOG) 2>&1
+	@echo "Make u-boot ..."
+	@make -C $(U_BOOT_201012_WORKING) -j4		>> $(U_BOOT_BUILDLOG) 2>&1
+
