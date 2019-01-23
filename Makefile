@@ -26,6 +26,7 @@ all:
 
 include Makefile.linux
 include Makefile.qemu
+include Makefile.u-boot
 
 highfive:
 	@make clean
