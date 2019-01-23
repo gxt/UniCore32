@@ -20,7 +20,7 @@ qemu-0207-new:
 	@cd $(QEMU_0207_WORKING); git submodule update --reference $(QEMU_PIXMAN_LOCAL) --init pixman
 	@cd $(QEMU_0207_WORKING); git am $(QEMU_0207_PATCHES)/*
 
-qemu-make:
+qemu-0207-make:
 	@echo "Remove old log file"
 	@rm -fr $(QEMU_BUILDLOG)
 	@echo "Configure qemu ..."
@@ -37,18 +37,18 @@ qemu-make:
 	@make -C $(QEMU_0207_WORKING) -j4	>> $(QEMU_BUILDLOG) 2>&1
 	@make -C $(QEMU_0207_WORKING) install	>> $(QEMU_BUILDLOG) 2>&1
 
-qemu-run:
+qemu-0207-run:
 	@echo "Remove old log file"
 	@rm -fr $(QEMU_TRACELOG)
 	@echo "Running QEMU in this tty ..."
-	@$(DIR_WORKING)/qemu-unicore32/bin/qemu-system-unicore32\
-		-curses						\
-		-M puv3						\
-		-m 512						\
-		-icount 0					\
-		-kernel $(DIR_WORKING)/zImage			\
-		-net nic					\
-		-net tap,ifname=tap_$(USER),script=no,downscript=no	\
+	@$(DIR_WORKING)/qemu-unicore32/bin/qemu-system-unicore32	\
+		-curses							\
+		-M puv3							\
+		-m 512							\
+		-icount 0						\
+		-kernel $(DIR_WORKING)/zImage				\
 		-append "root=/dev/nfs nfsroot=192.168.200.161:/export/guestroot/,tcp rw ip=192.168.122.4"    \
 		2> $(QEMU_TRACELOG)
 
+#		-net nic						\
+#		-net tap,ifname=tap_$(USER),script=no,downscript=no	\
