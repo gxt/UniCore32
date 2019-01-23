@@ -21,6 +21,8 @@ linux-new:
 		git am $(LINUX_PATCHES_DIR)/*
 
 linux-make:
+	@echo "Remove old log file"
+	@rm -fr $(LINUX_BUILDLOG)
 	@echo "Make mrproper ..."
 	@make -C $(DIR_WORKING)/linux ARCH=$(LINUX_ARCH)	\
 		mrproper >> $(LINUX_BUILDLOG) 2>&1
