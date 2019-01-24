@@ -43,6 +43,7 @@ initramfs-helloworld:
 	@echo "Generate helloworld prog"
 	@mkdir -p $(INITRAMFS_LIST_DEST)
 	@$(CROSS_COMPILE)gcc -static -o $(INITRAMFS_LIST_DEST)/helloworld $(DIR_UNICORE32)/initramfs/helloworld.c
-	@echo "Copy initramfs_list file"
+	@echo "Generate initramfs_list file"
 	@cp $(DIR_UNICORE32)/initramfs/initramfs_list.helloworld $(INITRAMFS_LIST_FILE)
+	@echo "file /init $(INITRAMFS_LIST_DEST)/helloworld 755 0 0"	>> $(INITRAMFS_LIST_FILE)
 

@@ -13,4 +13,3 @@ nod /dev/loop0 		644 0 0 b 7 0
 nod /dev/tty	 	644 0 0 c 5 1
 nod /dev/mem		666 0 0 c 1 1
 
-file /init		helloworld 755 0 0
