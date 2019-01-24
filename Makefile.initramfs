@@ -43,3 +43,11 @@ initramfs-helloworld:
 	@mkdir -p $(INITRAMFS_LIST)
 	@$(CROSS_COMPILE)gcc -static -o $(INITRAMFS_LIST)/init $(DIR_UNICORE32)/initramfs/helloworld.c
 
+initramfs-busybox-1-20:
+	@echo "Remove old initramfs_list"
+	@rm -fr $(INITRAMFS_LIST)
+	@echo "Copy busybox installed dir"
+	@cp -a $(BUSYBOX_1_20_WORKING)/_install $(INITRAMFS_LIST)
+	@echo "TODO: linux config CONFIG_INITRAMFS_SOURCE can be either directories or files"
+	@echo "      Maybe initramfs_list.busybox should be specified together"
+
