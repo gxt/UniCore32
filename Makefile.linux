@@ -21,8 +21,9 @@ linux-0409-make-qemu:
 	@rm -fr $(LINUX_BUILDLOG)
 	@echo "Make mrproper ..."
 	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) mrproper		>> $(LINUX_BUILDLOG) 2>&1
-	@echo "Softlinking initramfs_list"
-	@ln -sf $(DIR_WORKING)/initramfs_list $(LINUX_0409_WORKING)/usr/
+	@echo "Remove old initramfs_list and copy new initramfs_list"
+	@rm -fr $(LINUX_0409_WORKING)/usr/initramfs_list
+	@cp -a $(DIR_WORKING)/initramfs_list $(LINUX_0409_WORKING)/usr/
 	@echo "Make $(LINUX_DEFCONFIG) ..."
 	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) $(LINUX_DEFCONFIG)	>> $(LINUX_BUILDLOG) 2>&1
 	@echo "Making (in several minutes) ..."
