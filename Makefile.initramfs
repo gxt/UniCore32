@@ -34,16 +34,12 @@ busybox-1-20-make:
 	@echo "Install busybox ..."
 	@make -C $(BUSYBOX_1_20_WORKING) install		>> $(BUSYBOX_BUILDLOG) 2>&1
 
-INITRAMFS_LIST_FILE	:= $(DIR_WORKING)/initramfs_list
-INITRAMFS_LIST_DEST	:= $(DIR_WORKING)/initramfs
+INITRAMFS_LIST		:= $(DIR_WORKING)/initramfs_list
 
 initramfs-helloworld:
 	@echo "Remove old initramfs_list"
-	@rm -fr $(INITRAMFS_LIST_FILE) $(INITRAMFS_LIST_DEST)
+	@rm -fr $(INITRAMFS_LIST)
 	@echo "Generate helloworld prog"
-	@mkdir -p $(INITRAMFS_LIST_DEST)
-	@$(CROSS_COMPILE)gcc -static -o $(INITRAMFS_LIST_DEST)/helloworld $(DIR_UNICORE32)/initramfs/helloworld.c
-	@echo "Generate initramfs_list file"
-	@cp $(DIR_UNICORE32)/initramfs/initramfs_list.helloworld $(INITRAMFS_LIST_FILE)
-	@echo "file /init $(INITRAMFS_LIST_DEST)/helloworld 755 0 0"	>> $(INITRAMFS_LIST_FILE)
+	@mkdir -p $(INITRAMFS_LIST)
+	@$(CROSS_COMPILE)gcc -static -o $(INITRAMFS_LIST)/init $(DIR_UNICORE32)/initramfs/helloworld.c
 
