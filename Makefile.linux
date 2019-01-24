@@ -16,11 +16,13 @@ linux-0409-new:
 	@cd $(LINUX_0409_WORKING); git checkout -b unicore32 $(LINUX_0409_VERSION)
 	@cd $(LINUX_0409_WORKING); git am $(LINUX_0409_PATCHES)/*.patch
 
-linux-0409-make:
+linux-0409-make-qemu:
 	@echo "Remove old log file"
 	@rm -fr $(LINUX_BUILDLOG)
 	@echo "Make mrproper ..."
 	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) mrproper		>> $(LINUX_BUILDLOG) 2>&1
+	@echo "Softlinking initramfs_list"
+	@ln -sf $(DIR_WORKING)/initramfs_list $(LINUX_0409_WORKING)/usr/
 	@echo "Make $(LINUX_DEFCONFIG) ..."
 	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) $(LINUX_DEFCONFIG)	>> $(LINUX_BUILDLOG) 2>&1
 	@echo "Making (in several minutes) ..."
