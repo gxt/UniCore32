@@ -1,0 +1,36 @@
+BUSYBOX_LOCAL		:= /pub/GIT-ORIGIN/busybox.git
+BUSYBOX_BUILDLOG	:= $(DIR_WORKING)/buildlog-busybox
+
+BUSYBOX_1_20_WORKING	:= $(DIR_WORKING)/busybox-1-20
+BUSYBOX_1_20_VERSION	:= origin/1_20_stable
+BUSYBOX_1_20_CONFIG	:= $(BUSYBOX_1_20_WORKING)/.config
+
+busybox-1-20-new:
+	@echo "Remove old busybox repo ..."
+	@test -d $(DIR_WORKING) || mkdir -p $(DIR_WORKING)
+	@rm -fr $(BUSYBOX_1_20_WORKING)
+	@echo "Clone local repo"
+	@git clone $(BUSYBOX_LOCAL) -- $(BUSYBOX_1_20_WORKING)
+	@cd $(BUSYBOX_1_20_WORKING); git checkout -b unicore32 $(BUSYBOX_1_20_VERSION)
+	@echo "Generating default config ..."
+	@echo "CONFIG_STATIC=y"					>  $(BUSYBOX_1_20_CONFIG)
+	@echo "CONFIG_CROSS_COMPILER_PREFIX='$(CROSS_COMPILE)'"	>> $(BUSYBOX_1_20_CONFIG)
+	@echo "# CONFIG_NANDWRITE is not set"			>> $(BUSYBOX_1_20_CONFIG)
+	@echo "# CONFIG_NANDDUMP is not set"			>> $(BUSYBOX_1_20_CONFIG)
+	@echo "# CONFIG_UBIATTACH is not set"			>> $(BUSYBOX_1_20_CONFIG)
+	@echo "# CONFIG_UBIDETACH is not set"			>> $(BUSYBOX_1_20_CONFIG)
+	@echo "# CONFIG_UBIMKVOL is not set"			>> $(BUSYBOX_1_20_CONFIG)
+	@echo "# CONFIG_UBIRMVOL is not set"			>> $(BUSYBOX_1_20_CONFIG)
+	@echo "# CONFIG_UBIRSVOL is not set"			>> $(BUSYBOX_1_20_CONFIG)
+	@echo "# CONFIG_UBIUPDATEVOL is not set"		>> $(BUSYBOX_1_20_CONFIG)
+
+busybox-1-20-make:
+	@echo "Remove old log file"
+	@rm -fr $(BUSYBOX_BUILDLOG)
+	@echo "Configure busybox ..."
+	@yes "" | make -C $(BUSYBOX_1_20_WORKING) oldconfig	>> $(BUSYBOX_BUILDLOG) 2>&1
+	@echo "Make busybox ..."
+	@make -C $(BUSYBOX_1_20_WORKING) -j4			>> $(BUSYBOX_BUILDLOG) 2>&1
+	@echo "Install busybox ..."
+	@make -C $(BUSYBOX_1_20_WORKING) install		>> $(BUSYBOX_BUILDLOG) 2>&1
+
