@@ -1,6 +1,6 @@
 LINUX_ARCH		:= unicore32
 LINUX_BUILDLOG		:= $(DIR_WORKING)/buildlog-linux
-LINUX_DEFCONFIG		:= unicore32_defconfig
+LINUX_DEFCONFIG		:= qemu_defconfig
 
 LINUX_0409_LOCAL		:= /pub/GIT-ORIGIN/linux/linux-stable.git
 LINUX_0409_WORKING		:= $(DIR_WORKING)/linux-0409
