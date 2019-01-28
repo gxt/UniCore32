@@ -4,7 +4,7 @@ QEMU_TARGETS	:= unicore32-linux-user,unicore32-softmmu
 QEMU_TRACELOG	:= $(DIR_WORKING)/tracelog-qemu
 
 QEMU_0207_WORKING	:= $(DIR_WORKING)/qemu-0207
-QEMU_0207_VERSION	:= v2.7.0
+QEMU_0207_VERSION	:= origin/stable-2.7
 QEMU_0207_PATCHES	:= $(DIR_UNICORE32)/patches-qemu-0207
 QEMU_0207_RUNNING	:= $(DIR_WORKING)/qemu-0207-uc32
 
