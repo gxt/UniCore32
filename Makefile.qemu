@@ -86,6 +86,5 @@ qemu-0301-make:
 	@make -C $(QEMU_0301_WORKING) -j4	>> $(QEMU_BUILDLOG) 2>&1
 	@make -C $(QEMU_0301_WORKING) install	>> $(QEMU_BUILDLOG) 2>&1
 	@echo "Softlinking necessary files ..."
-	@ln -sf $(QEMU_0301_RUNNING)/bin/qemu-unicore32 $(DIR_WORKING)
 	@ln -sf $(QEMU_0301_RUNNING)/bin/qemu-system-unicore32 $(DIR_WORKING)
 
