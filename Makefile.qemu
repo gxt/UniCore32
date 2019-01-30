@@ -1,7 +1,7 @@
 QEMU_LOCAL	:= /pub/GIT-ORIGIN/qemu/qemu.git
 QEMU_BUILDLOG	:= $(DIR_WORKING)/buildlog-qemu
 QEMU_TARGETS	:= unicore32-softmmu
-QEMU_TRACELOG	:= $(DIR_WORKING)/tracelog-qemu
+QEMU_DEBUGLOG	:= $(DIR_WORKING)/debuglog-qemu
 
 QEMU_0207_WORKING	:= $(DIR_WORKING)/qemu-0207
 QEMU_0207_VERSION	:= origin/stable-2.7
@@ -42,7 +42,7 @@ qemu-0207-make:
 
 qemu-0207-run:
 	@echo "Remove old log file"
-	@rm -fr $(QEMU_TRACELOG)
+	@rm -fr $(QEMU_DEBUGLOG)
 	@echo "Running QEMU in this tty ..."
 	@$(QEMU_0207_RUNNING)/bin/qemu-system-unicore32			\
 		-curses							\
@@ -51,7 +51,7 @@ qemu-0207-run:
 		-icount 0						\
 		-kernel $(DIR_WORKING)/zImage				\
 		-append "root=/dev/nfs nfsroot=192.168.200.161:/export/guestroot/,tcp rw ip=192.168.122.4"    \
-		2> $(QEMU_TRACELOG)
+		-D $(QEMU_DEBUGLOG)
 
 #		-d cpu,out_asm,int,op,mmu				\
 #		-net nic						\
