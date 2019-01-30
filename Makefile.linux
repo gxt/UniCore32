@@ -37,7 +37,7 @@ linux-0409-make-qemu:
 	@echo "Remove old initramfs_list and copy new initramfs_list"
 	@rm -fr $(LINUX_0409_WORKING)/usr/initramfs_list
 	@cp -a $(DIR_WORKING)/initramfs_list $(LINUX_0409_WORKING)/usr/
-	@echo "Make $(LINUX_DEFCONFIG) ..."
+	@echo "Make qemu_defconfig ..."
 	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) qemu_defconfig	>> $(LINUX_BUILDLOG) 2>&1
 	@echo "Making (in several minutes) ..."
 	@make -C $(LINUX_0409_WORKING) ARCH=$(LINUX_ARCH) -j4			>> $(LINUX_BUILDLOG) 2>&1
