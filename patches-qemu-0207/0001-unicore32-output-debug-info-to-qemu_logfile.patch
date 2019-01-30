@@ -1,0 +1,35 @@
+From da7c2b3f66d9332a809a75cb68aee14a19cd153e Mon Sep 17 00:00:00 2001
+From: Guan Xuetao <gxt@pku.edu.cn>
+Date: Wed, 30 Jan 2019 17:16:16 +0800
+Subject: [PATCH] unicore32: output debug info to qemu_logfile
+
+Signed-off-by: Guan Xuetao <gxt@pku.edu.cn>
+---
+ target-unicore32/helper.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/target-unicore32/helper.c b/target-unicore32/helper.c
+index d603bde..1278df3 100644
+--- a/target-unicore32/helper.c
++++ b/target-unicore32/helper.c
+@@ -22,7 +22,7 @@
+ #undef DEBUG_UC32
+ 
+ #ifdef DEBUG_UC32
+-#define DPRINTF(fmt, ...) printf("%s: " fmt , __func__, ## __VA_ARGS__)
++#define DPRINTF(fmt, ...) fprintf(qemu_logfile, "%s: " fmt , __func__, ## __VA_ARGS__)
+ #else
+ #define DPRINTF(fmt, ...) do {} while (0)
+ #endif
+@@ -220,7 +220,7 @@ static void putc_on_screen(unsigned char ch)
+ void helper_cp1_putc(target_ulong x)
+ {
+     putc_on_screen((unsigned char)x);   /* Output to screen */
+-    DPRINTF("%c", x);                   /* Output to stdout */
++    fprintf(qemu_logfile, "%c", x);
+ }
+ #endif
+ 
+-- 
+2.7.4
+
