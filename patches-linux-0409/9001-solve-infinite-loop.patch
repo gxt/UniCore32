@@ -1,0 +1,25 @@
+From 79b692cf818a96a0a7cc38a8a450d304e481d702 Mon Sep 17 00:00:00 2001
+From: lzj <lizhuojin@pku.edu.cn>
+Date: Sat, 24 Dec 2016 15:55:26 +0800
+Subject: [PATCH] solve-infinite-loop
+
+---
+ mm/percpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/percpu.c b/mm/percpu.c
+index 9903830..679f4f8 100644
+--- a/mm/percpu.c
++++ b/mm/percpu.c
+@@ -274,7 +274,7 @@ static void __maybe_unused pcpu_next_pop(struct pcpu_chunk *chunk,
+  */
+ #define pcpu_for_each_unpop_region(chunk, rs, re, start, end)		    \
+ 	for ((rs) = (start), pcpu_next_unpop((chunk), &(rs), &(re), (end)); \
+-	     (rs) < (re);						    \
++	     (rs) < (re) && (rs) < (end);				    \
+ 	     (rs) = (re) + 1, pcpu_next_unpop((chunk), &(rs), &(re), (end)))
+ 
+ #define pcpu_for_each_pop_region(chunk, rs, re, start, end)		    \
+-- 
+2.7.4
+
