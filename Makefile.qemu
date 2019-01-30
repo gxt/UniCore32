@@ -57,34 +57,3 @@ qemu-0207-run:
 #		-net nic						\
 #		-net tap,ifname=tap_$(USER),script=no,downscript=no	\
 
-QEMU_0301_WORKING	:= $(DIR_WORKING)/qemu-0301
-QEMU_0301_VERSION	:= v3.1.0
-QEMU_0301_RUNNING	:= $(DIR_WORKING)/qemu-0301-uc32
-
-qemu-0301-new:
-	@echo "Remove old qemu repo ..."
-	@test -d $(DIR_WORKING) || mkdir -p $(DIR_WORKING)
-	@rm -fr $(QEMU_0301_WORKING)
-	@echo "Clone local repo"
-	@git clone $(QEMU_LOCAL) -- $(QEMU_0301_WORKING)
-	@cd $(QEMU_0301_WORKING); git checkout -b unicore32 $(QEMU_0301_VERSION)
-
-qemu-0301-make:
-	@echo "Remove old log file"
-	@rm -fr $(QEMU_BUILDLOG)
-	@echo "Configure qemu ..."
-	@cd $(QEMU_0301_WORKING); ./configure				\
-		--target-list=$(QEMU_TARGETS)				\
-		--enable-debug			 			\
-		--disable-sdl			 			\
-		--enable-curses						\
-		--extra-cflags="-D restrict=restricT"			\
-		--interp-prefix=$(CROSS_UNICORE32)/unicore32-linux	\
-		--prefix=$(QEMU_0301_RUNNING)				\
-		>> $(QEMU_BUILDLOG) 2>&1
-	@echo "Make qemu and make install ..."
-	@make -C $(QEMU_0301_WORKING) -j4	>> $(QEMU_BUILDLOG) 2>&1
-	@make -C $(QEMU_0301_WORKING) install	>> $(QEMU_BUILDLOG) 2>&1
-	@echo "Softlinking necessary files ..."
-	@ln -sf $(QEMU_0301_RUNNING)/bin/qemu-system-unicore32 $(DIR_WORKING)
-
