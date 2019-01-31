@@ -35,6 +35,8 @@ busybox-1-20-make:
 	@make -C $(BUSYBOX_1_20_WORKING) install		>> $(BUSYBOX_BUILDLOG) 2>&1
 
 INITRAMFS_LIST		:= $(DIR_WORKING)/initramfs_list
+INITRAMFS_CPIO_GZ	:= $(DIR_WORKING)/initramfs_data.cpio.gz
+INITRAMFS_EXTRACT	:= $(DIR_WORKING)/__initramfs_list
 
 initramfs-helloworld:
 	@echo "Remove old initramfs_list"
@@ -50,4 +52,15 @@ initramfs-busybox-1-20:
 	@cp -a $(BUSYBOX_1_20_WORKING)/_install $(INITRAMFS_LIST)
 	@echo "TODO: linux config CONFIG_INITRAMFS_SOURCE can be either directories or files"
 	@echo "      Maybe initramfs_list.busybox should be specified together"
+
+initramfs-list:
+	@echo "List initramfs files"
+	@zcat $(INITRAMFS_CPIO_GZ) | cpio --list --verbose --no-preserve-owner
+
+initramfs-extract:
+	@echo "Remove old extract dir"
+	@rm -fr $(INITRAMFS_EXTRACT)
+	@echo "Extract initramfs to $(INITRAMFS_EXTRACT) ..."
+	@mkdir -p $(INITRAMFS_EXTRACT)
+	@cd $(INITRAMFS_EXTRACT); zcat $(INITRAMFS_CPIO_GZ) | cpio --extract --make-directories
 
