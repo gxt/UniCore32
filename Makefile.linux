@@ -44,6 +44,7 @@ linux-0409-make-qemu:
 	@echo "Softlinking necessary files ..."
 	@ln -sf $(LINUX_0409_WORKING)/arch/unicore32/boot/zImage $(DIR_WORKING)
 	@ln -sf $(LINUX_0409_WORKING)/System.map $(DIR_WORKING)
+	@ln -sf $(LINUX_0409_WORKING)/usr/initramfs_data.cpio.gz $(DIR_WORKING)
 
 linux-0409-headers:
 	@echo "Headers check ..."
