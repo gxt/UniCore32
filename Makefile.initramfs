@@ -35,23 +35,29 @@ busybox-1-20-make:
 	@make -C $(BUSYBOX_1_20_WORKING) install		>> $(BUSYBOX_BUILDLOG) 2>&1
 
 INITRAMFS_LIST		:= $(DIR_WORKING)/initramfs_list
+INITRAMFS_LIST_BASIC	:= $(DIR_UNICORE32)/initramfs/initramfs_list.basic
+INITRAMFS_LIST_ROOTFS	:= $(DIR_WORKING)/initramfs_list/initramfs_rootfs
 INITRAMFS_CPIO_GZ	:= $(DIR_WORKING)/initramfs_data.cpio.gz
 INITRAMFS_EXTRACT	:= $(DIR_WORKING)/__initramfs_list
 
 initramfs-helloworld:
 	@echo "Remove old initramfs_list"
 	@rm -fr $(INITRAMFS_LIST)
-	@echo "Generate helloworld prog"
+	@echo "Copy basic config to $(INITRAMFS_LIST)"
 	@mkdir -p $(INITRAMFS_LIST)
-	@$(CROSS_COMPILE)gcc -static -o $(INITRAMFS_LIST)/init $(DIR_UNICORE32)/initramfs/helloworld.c
+	@cp $(INITRAMFS_LIST_BASIC) $(INITRAMFS_LIST)
+	@echo "Generate helloworld prog"
+	@mkdir -p $(INITRAMFS_LIST_ROOTFS)
+	@$(CROSS_COMPILE)gcc -static -o $(INITRAMFS_LIST_ROOTFS)/init $(DIR_UNICORE32)/initramfs/helloworld.c
 
 initramfs-busybox-1-20:
 	@echo "Remove old initramfs_list"
 	@rm -fr $(INITRAMFS_LIST)
+	@echo "Copy basic config to $(INITRAMFS_LIST)"
+	@mkdir -p $(INITRAMFS_LIST)
+	@cp $(INITRAMFS_LIST_BASIC) $(INITRAMFS_LIST)
 	@echo "Copy busybox installed dir"
-	@cp -a $(BUSYBOX_1_20_WORKING)/_install $(INITRAMFS_LIST)
-	@echo "TODO: linux config CONFIG_INITRAMFS_SOURCE can be either directories or files"
-	@echo "      Maybe initramfs_list.busybox should be specified together"
+	@cp -a $(BUSYBOX_1_20_WORKING)/_install $(INITRAMFS_LIST_ROOTFS)
 
 initramfs-list:
 	@echo "List initramfs files"
