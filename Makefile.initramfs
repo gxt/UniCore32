@@ -14,7 +14,7 @@ busybox-1-20-new:
 	@cd $(BUSYBOX_1_20_WORKING); git checkout -b unicore32 $(BUSYBOX_1_20_VERSION)
 	@echo "Generating default config ..."
 	@echo "CONFIG_STATIC=y"					>  $(BUSYBOX_1_20_CONFIG)
-	@echo "CONFIG_CROSS_COMPILER_PREFIX='$(CROSS_COMPILE)'"	>> $(BUSYBOX_1_20_CONFIG)
+	@echo "CONFIG_CROSS_COMPILER_PREFIX=\"$(CROSS_COMPILE)\""	>> $(BUSYBOX_1_20_CONFIG)
 	@echo "# CONFIG_NANDWRITE is not set"			>> $(BUSYBOX_1_20_CONFIG)
 	@echo "# CONFIG_NANDDUMP is not set"			>> $(BUSYBOX_1_20_CONFIG)
 	@echo "# CONFIG_UBIATTACH is not set"			>> $(BUSYBOX_1_20_CONFIG)
