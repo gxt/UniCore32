@@ -19,7 +19,7 @@ index 0000000..a3cac65
 +CONFIG_LOCALVERSION="-qemu"
 +#	Initial RAM filesystem and RAM disk (initramfs/initrd) support
 +CONFIG_BLK_DEV_INITRD=y
-+CONFIG_INITRAMFS_SOURCE="usr/initramfs_list"
++CONFIG_INITRAMFS_SOURCE="usr/initramfs_list/initramfs_list.basic usr/initramfs_list/initramfs_rootfs"
 +
 +### System Type
 +CONFIG_ARCH_PUV3=y
