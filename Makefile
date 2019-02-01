@@ -12,12 +12,8 @@ all:
 	@echo ""
 	@echo "Enjoy UniCore32!"
 	@echo ""
-	@echo "For ONE core: make highfive"
-	@echo "     or: make clean"
-	@echo "     or: make busybox"
-	@echo ""
-	@echo "Running qemu and get trace"
-	@echo "     make qemu-run  (file and local mode)"
+	@echo "Prepare to run qemu"
+	@echo "     make highfive"
 	@echo ""
 
 include Makefile.linux
@@ -27,12 +23,18 @@ include Makefile.initramfs
 
 highfive:
 	@make clean
-	@make busybox
-	@make linux-new
-	@make linux-make
-	@make qemu-new
-	@make qemu-make
+	@make busybox-1-20-new
+	@make busybox-1-20-make
+	@make initramfs-busybox-1-20
+	@make linux-0409-new
+	@make linux-0409-make-qemu
+	@make qemu-0207-new
+	@make qemu-0207-make
+	@echo ""
+	@echo "Bingo! It's time to"
+	@echo "    make qemu-0207-run"
+	@echo ""
 
 clean:
-	@rm -fr $(DIR_WORKING)
+	@rm -fr $(DIR_WORKING)/*
 
