@@ -1,10 +1,10 @@
 # UniCore32 environment
 
-## Linux kernel
-Linux-stable base: 4.9.150-tao1
-
-## Qemu simulator
-Tested version: stable-2.7
+Version: 1.0
+Linux-stable version: 4.9.150
+Qemu version: stable-2.7
+Busybox version: 1-20-stable
+Test bed: ubuntu 16.04.5
 
 ## Step to run linux on qemu
 
