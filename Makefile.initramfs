@@ -58,6 +58,8 @@ initramfs-busybox-1-20:
 	@cp $(INITRAMFS_LIST_BASIC) $(INITRAMFS_LIST)
 	@echo "Copy busybox installed dir"
 	@cp -a $(BUSYBOX_1_20_WORKING)/_install $(INITRAMFS_LIST_ROOTFS)
+	@echo "Copy etc dir"
+	@cp -a $(DIR_UNICORE32)/initramfs/etc $(INITRAMFS_LIST_ROOTFS)/
 
 initramfs-list:
 	@echo "List initramfs files"
